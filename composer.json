@@ -10,12 +10,12 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "~4",
-	"facebook/php-sdk": "v3.2.3"
+	"facebook/php-sdk": "dev-master"
     },
     "autoload": {
         "psr-0": {
             "Zolli\\Phacebook": "src/"
         }
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev"
 }
