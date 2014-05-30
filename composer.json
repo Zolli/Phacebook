@@ -1,0 +1,21 @@
+{
+    "name": "zolli/phacebook",
+    "description": "",
+    "authors": [
+        {
+            "name": "Zoltan Borsos",
+            "email": "zolli07@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.1.*",
+	"facebook/php-sdk": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "Zolli\\Phacebook": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
