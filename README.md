@@ -86,7 +86,7 @@ if(Phacebook::authenticate()) {
 
 ## Release Notes
 
-### Version 3.0.0
+### Version 2.0.0
 * Full refactor
 * Updated for Facebook PHP SDK 4
 
