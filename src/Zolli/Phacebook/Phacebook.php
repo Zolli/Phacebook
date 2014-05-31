@@ -5,7 +5,9 @@ use Facebook\FacebookRequest;
 use Facebook\FacebookSession;
 use Facebook\FacebookRequestException;
 use Facebook\GraphObject;
+use Zolli\Phacebook\Helpers\LaravelSessionLoginHelper;
 use Config;
+use Session;
 use Response;
 use URL;
 use Redirect;
@@ -48,18 +50,16 @@ class Phacebook {
      * and set the redirect URL on the redirector
      */
     private function initFacebook() {
-        session_start();
-
         FacebookSession::setDefaultApplication(Config::get("Phacebook::applicationConfig.appId"), Config::get("Phacebook::applicationConfig.secret"));
-        $this->loginHelper = new FacebookRedirectLoginHelper(URL::to(Config::get("Phacebook::redirectUrl")));
+        $this->loginHelper = new LaravelSessionLoginHelper(URL::to(Config::get("Phacebook::redirectUrl")));
     }
 
     /**
      * Try to get the session, and initialize a new FacebookSession class
      */
     private function tryGetSession() {
-        if (isset($_SESSION) && isset($_SESSION['fb_token'])) {
-            $this->facebookSession = new FacebookSession($_SESSION['fb_token']);
+        if (Session::has('fb_token')) {
+            $this->facebookSession = new FacebookSession(Session::get('fb_token'));
 
             try {
                 if (!$this->facebookSession->validate()) {
@@ -77,7 +77,7 @@ class Phacebook {
     public function handleCallback() {
         try {
             $this->facebookSession = $this->loginHelper->getSessionFromRedirect();
-            $_SESSION['fb_token'] = $this->facebookSession->getToken();
+            Session::put('fb_token', $this->facebookSession->getToken());
 
             //Little workaround, because Laravel Redierct facade not works as expected in package
             Response::make('',302)->header('Location',(string)Config::get("Phacebook::redirectAfterLoginUrl"))->send();
