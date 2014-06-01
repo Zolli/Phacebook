@@ -13,7 +13,7 @@
 - Built on **Facebook PHP SDK Version 4**
 
 **TODO:**
-- Use Laravel SessionManager class instead of native session
+- None :)
 
 **Planned:**
 - Interface for all request types

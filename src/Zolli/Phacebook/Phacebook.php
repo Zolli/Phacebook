@@ -20,9 +20,9 @@ use Zolli\Phacebook\Helpers\LaravelSessionLoginHelper;
  * @author Zoltan Borsos <zolli07@gmail.com>
  * @copyright 2014 Zoltan Borsos
  * @license MIT
- * @version 2.2
+ * @version 2.1
  */
-class Phacebook extends \BaseController {
+class Phacebook {
 
     /**
      * @var FacebookRedirectLoginHelper
@@ -101,10 +101,8 @@ class Phacebook extends \BaseController {
             Session::put('fb_token', $this->facebookSession->getToken());
 
             return TRUE;
-        } catch(FacebookRequestException $ex) {
-            var_dump($ex);
-        } catch(Exception $e) {
-            var_dump($e);
+        } catch(FacebookRequestException $e) {
+            throw new PhacebookException($e->getMessage());
         }
     }
 
