@@ -1,12 +1,20 @@
 {
     "name": "zolli/phacebook",
-    "description": "",
+    "description": "Facebook authentication library for Laravel 4. Uses Facebook PHP SDK 4",
+    "license": "MIT",
+    "version": "2.1.0",
     "authors": [
         {
             "name": "Zoltan Borsos",
-            "email": "zolli07@gmail.com"
+            "email": "zolli07@gmail.com",
+            "role": "Developer"
         }
     ],
+    "support": {
+        "email": "zolli07@gmail.com",
+        "issues": "https://github.com/Zolli/Phacebook/issues",
+        "source": "https://github.com/Zolli/Phacebook"
+    },
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "~4",
