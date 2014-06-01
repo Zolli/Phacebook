@@ -20,11 +20,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Application scopes
+    |--------------------------------------------------------------------------
+    |
+    | Here you can specify the scopes (or permissions) witch will be asking
+    | from the user on first contact
+    |
+    */
+    'scopes' => ['email'],
+
+    /*
+    |--------------------------------------------------------------------------
     | Redirect URL
     |--------------------------------------------------------------------------
     |
     | You need to add a "Website platform" to the Facebook application
-    | This field must be sam as "Site URL" field (without base URL) in the
+    | This field must be same as "Site URL" field (without base URL) in the
     | application configuration
     |
     */
@@ -40,16 +51,5 @@ return [
     |
     */
     'redirectAfterLoginUrl' => '/',
-
-    /*
-    |--------------------------------------------------------------------------
-    | Application scopes
-    |--------------------------------------------------------------------------
-    |
-    | Here you can specify the scopes (or permissions) witch will be asking
-    | from the user on first contact
-    |
-    */
-    'scopes' => ['email'],
 
 ];

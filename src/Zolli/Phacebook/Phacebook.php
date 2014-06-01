@@ -1,17 +1,16 @@
 <?php namespace Zolli\Phacebook;
 
+use Config;
 use Facebook\FacebookRedirectLoginHelper;
 use Facebook\FacebookRequest;
-use Facebook\FacebookSession;
 use Facebook\FacebookRequestException;
+use Facebook\FacebookSDKException;
+use Facebook\FacebookSession;
 use Facebook\GraphObject;
-use Zolli\Phacebook\Helpers\LaravelSessionLoginHelper;
-use Config;
 use Session;
-use Response;
 use URL;
-use Redirect;
-use Input;
+use Zolli\Phacebook\Exceptions\PhacebookException;
+use Zolli\Phacebook\Helpers\LaravelSessionLoginHelper;
 
 /**
  * Class Phacebook
@@ -21,9 +20,9 @@ use Input;
  * @author Zoltan Borsos <zolli07@gmail.com>
  * @copyright 2014 Zoltan Borsos
  * @license MIT
- * @version 2.0
+ * @version 2.2
  */
-class Phacebook {
+class Phacebook extends \BaseController {
 
     /**
      * @var FacebookRedirectLoginHelper
@@ -48,10 +47,16 @@ class Phacebook {
     /**
      * Start the session (not the laravel Sessionmanager class)
      * and set the redirect URL on the redirector
+     *
+     * @throw PhacebookException
      */
     private function initFacebook() {
-        FacebookSession::setDefaultApplication(Config::get("Phacebook::applicationConfig.appId"), Config::get("Phacebook::applicationConfig.secret"));
-        $this->loginHelper = new LaravelSessionLoginHelper(URL::to(Config::get("Phacebook::redirectUrl")));
+        try {
+            FacebookSession::setDefaultApplication(Config::get("Phacebook::applicationConfig.appId"), Config::get("Phacebook::applicationConfig.secret"));
+            $this->loginHelper = new LaravelSessionLoginHelper(URL::to(Config::get("Phacebook::redirectUrl")));
+        } catch(FacebookSDKException $e) {
+            throw new PhacebookException($e->getMessage());
+        }
     }
 
     /**
@@ -72,6 +77,22 @@ class Phacebook {
     }
 
     /**
+     * Try tlo initialize FacebookSession with a providedd acces token
+     *
+     * @param String $accessToken Tha external accessToken
+     * @throws Exceptions\PhacebookException
+     */
+    private function tryValidateSession($accessToken) {
+        $this->facebookSession = new FacebookSession($accessToken);
+
+        try {
+            $this->facebookSession->validate();
+        } catch(FacebookSDKException $e) {
+            throw new PhacebookException($e->getMessage());
+        }
+    }
+
+    /**
      * Handles the Facebook callback request
      */
     public function handleCallback() {
@@ -79,8 +100,7 @@ class Phacebook {
             $this->facebookSession = $this->loginHelper->getSessionFromRedirect();
             Session::put('fb_token', $this->facebookSession->getToken());
 
-            //Little workaround, because Laravel Redierct facade not works as expected in package
-            Response::make('',302)->header('Location',(string)Config::get("Phacebook::redirectAfterLoginUrl"))->send();
+            return TRUE;
         } catch(FacebookRequestException $ex) {
             var_dump($ex);
         } catch(Exception $e) {
@@ -156,14 +176,18 @@ class Phacebook {
     /**
      * Start an authentication request
      *
+     * @param String $providedToken External token
      * @return bool True if user is already logged in, otherwise redirect to the login URL
      */
-    public function authenticate() {
-        $this->tryGetSession();
+    public function authenticate($providedToken = null) {
+        if($providedToken !== NULL) {
+            $this->tryValidateSession($providedToken);
+        }
 
         if($this->facebookSession == null) {
             $url = $this->loginHelper->getLoginUrl(Config::get('Phacebook::scopes'));
-            Response::make('',302)->header('Location',(string)$url)->send();
+
+            return $url;
         } else {
             return TRUE;
         }

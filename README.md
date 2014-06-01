@@ -54,37 +54,55 @@ The configuration file is well documented. Set the values wish you want.
 
 ## Usage
 
-**Basic authentication:**
+**Basic authentication (in a controller):**
+
+Route for connect (example: /fbConnect)
+This code must be put to the controller:
 ```php
-if(Phacebook::authenticate()) {
-	//Do any API call here
+$result = Phacebook::authenticate($optionalAccessToken = "");
+
+if($result === TRUE) {
+    //Redirect user to home. Login success
+} else {
+    //The `$result` is a string. Redirect to this URL
+    return Redirect::away($result);
 }
 ```
 
-The `authenticate()` method return `TRUE` when user is successfuly authenticated, otherwise redirect to user to Facebook to giver permissions or access token if the user is already granted the permissions. After authentication user will be redirected to the URL specified in configuration. (On the `redirectAfterLoginUrl` key)
+Route for callbackHandling (Must be same as definied in configuration), like this:
+(If you want easyl extract these routine to a controller method)
+
+```php
+Route::get(Config::get('Phacebook::redirectUrl'), function() {
+    if(Phacebook::handleCallback() === TRUE) {
+        return Redirect::to(Config::get("Phacebook::redirectAfterLoginUrl"));
+    }
+});
+```
+
+##Code examples
 
 **Get user info:**
 ```php
-if(Phacebook::authenticate()) {
-	$userData = Phacebook::getUser();
-}
+$userData = Phacebook::getUser();
 ```
 
 **Execute FQL query:**
 ```php
-if(Phacebook::authenticate()) {
-	$fqlResult = Phacebook::executeFQLQuery("SELECT name FROM user WHERE uid = me()")->asArray();
-}
+$fqlResult = Phacebook::executeFQLQuery("SELECT name FROM user WHERE uid = me()")->asArray();
 ```
 
 **Execute a raw request:**
 ```php
-if(Phacebook::authenticate()) {
-	$fqlResult = Phacebook::makeRawRequest($path, $params, $requestType = 'GET');
-}
+$fqlResult = Phacebook::makeRawRequest($path, $params, $requestType = 'GET');
 ```
 
 ## Release Notes
+
+### Version 2.1
+* Use Laravel internal Session faced (Through `Zolli\Phacebook\Helpers\LaravelSessionLoginHelper`)
+* Refactored authenticate() method
+* Disabled internal handling of callback
 
 ### Version 2.0.0
 * Full refactor

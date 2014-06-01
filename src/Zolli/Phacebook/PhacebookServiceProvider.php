@@ -31,8 +31,6 @@ class PhacebookServiceProvider extends
 
     public function boot() {
         $this->package('Zolli/Phacebook');
-
-        include __DIR__.'/../../routes.php';
     }
 
     /**
