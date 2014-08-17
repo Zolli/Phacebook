@@ -9,15 +9,14 @@
 - Fully customizable with configuration
 - Result object casting
 - Method for easy FQL query execution
-- Unified interface for execute all request type
 - Built on **Facebook PHP SDK Version 4**
 
 **TODO:**
 - None :)
 
 **Planned:**
+- Request builder
 - Interface for all request types
-- Possible FQL query builder :)
 
 ## Quick start
 
