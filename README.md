@@ -99,6 +99,9 @@ $fqlResult = Phacebook::makeRawRequest($path, $params, $requestType = 'GET');
 
 ## Release Notes
 
+### Version 2.2
+* Fixed some changes on the Facebook SDK
+
 ### Version 2.1
 * Use Laravel internal Session faced (Through `Zolli\Phacebook\Helpers\LaravelSessionLoginHelper`)
 * Refactored authenticate() method

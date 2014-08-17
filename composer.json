@@ -3,7 +3,7 @@
     "description": "Facebook authentication library for Laravel 4. Uses Facebook PHP SDK 4",
     "keywords": ["laravel","facebook","auth"],
     "license": "MIT",
-    "version": "2.1.1",
+    "version": "2.2",
     "authors": [
         {
             "name": "Zoltan Borsos",

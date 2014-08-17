@@ -53,7 +53,7 @@ class Phacebook {
     private function initFacebook() {
         try {
             FacebookSession::setDefaultApplication(Config::get("Phacebook::applicationConfig.appId"), Config::get("Phacebook::applicationConfig.secret"));
-            $this->loginHelper = new LaravelSessionLoginHelper(URL::to(Config::get("Phacebook::redirectUrl")));
+            $this->loginHelper = new LaravelSessionLoginHelper();
         } catch(FacebookSDKException $e) {
             throw new PhacebookException($e->getMessage());
         }
@@ -183,8 +183,7 @@ class Phacebook {
         }
 
         if($this->facebookSession == null) {
-            $url = $this->loginHelper->getLoginUrl(Config::get('Phacebook::scopes'));
-
+            $url = $this->loginHelper->getLoginUrl(url(Config::get('Phacebook::redirectUrl')), Config::get('Phacebook::scopes'));
             return $url;
         } else {
             return TRUE;
